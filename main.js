@@ -18,7 +18,10 @@ const config = {
 
 const game = new Phaser.Game(config);
 
+// Player variables
 let player = null;
+let playerAcceleration = 30;
+let playerMaxSpeed = 390;
 let cursors = null;
 
 function preload() {
@@ -26,20 +29,25 @@ function preload() {
 }
 
 function create() {
+  // Initializing player
   player = this.physics.add.sprite(400, 550, "player").setScale(3, 1);
   cursors = this.input.keyboard.createCursorKeys();
-  player.setBounceX(0.3);
+  player.setBounceX(0.5);
   player.setCollideWorldBounds(true);
+  player.body.maxVelocity.x = playerMaxSpeed;
 }
 
 function update() {
+  // Player input and movement
   if (cursors.left.isDown) {
-    player.setVelocityX(-300);
+    player.setVelocityX(
+      Math.max(player.body.velocity.x - playerAcceleration, playerMaxSpeed * -1)
+    );
   } else if (cursors.right.isDown) {
-    player.setVelocityX(300);
+    player.setVelocityX(
+      Math.min(player.body.velocity.x + playerAcceleration, playerMaxSpeed)
+    );
   } else {
-    if (player.body.speed) {
-      player.body.setDragX(200);
-    }
+    player.setVelocityX(Phaser.Math.Linear(player.body.velocity.x, 0, 0.2));
   }
 }
