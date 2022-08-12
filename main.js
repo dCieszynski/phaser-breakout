@@ -28,14 +28,18 @@ function preload() {
 function create() {
   player = this.physics.add.sprite(400, 550, "player").setScale(3, 1);
   cursors = this.input.keyboard.createCursorKeys();
+  player.setBounceX(0.3);
+  player.setCollideWorldBounds(true);
 }
 
 function update() {
   if (cursors.left.isDown) {
-    player.setVelocityX(-200);
+    player.setVelocityX(-300);
   } else if (cursors.right.isDown) {
-    player.setVelocityX(200);
+    player.setVelocityX(300);
   } else {
-    player.setVelocityX(0);
+    if (player.body.speed) {
+      player.body.setDragX(200);
+    }
   }
 }
