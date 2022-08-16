@@ -26,13 +26,33 @@ let cursors = null;
 
 // Ball
 let ball = null;
+// Blocks
+let blocks = null;
 
 function preload() {
+  this.load.image("block", "/block.png");
   this.load.image("player", "/player.png");
   this.load.image("ball", "/ball.png");
 }
 
 function create() {
+  // Initializing blocks
+  blocks = this.physics.add.staticGroup();
+
+  blocks.createMultiple({
+    key: "block",
+    quantity: 69,
+  });
+
+  Phaser.Actions.GridAlign(blocks.getChildren(), {
+    width: 23,
+    height: 3,
+    cellWidth: 34,
+    cellHeight: 34,
+    x: 28,
+    y: 32,
+  });
+
   // Initializing player
   player = this.physics.add
     .sprite(400, 550, "player")
