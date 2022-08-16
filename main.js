@@ -24,17 +24,45 @@ let playerAcceleration = 30;
 let playerMaxSpeed = 390;
 let cursors = null;
 
+// Ball
+let ball = null;
+
 function preload() {
   this.load.image("player", "/player.png");
+  this.load.image("ball", "/ball.png");
 }
 
 function create() {
   // Initializing player
-  player = this.physics.add.sprite(400, 550, "player").setScale(3, 1);
+  player = this.physics.add
+    .sprite(400, 550, "player")
+    .setScale(3, 1)
+    .setImmovable();
   cursors = this.input.keyboard.createCursorKeys();
   player.setBounceX(0.5);
   player.setCollideWorldBounds(true);
   player.body.maxVelocity.x = playerMaxSpeed;
+
+  // Initializing ball
+  ball = this.physics.add.sprite(player.x, 500, "ball");
+  ball.setBounce(1);
+  ball.setCollideWorldBounds(true, true, true, false);
+  ball.setVelocity(-75, 300);
+  this.physics.add.collider(ball, player, this.hitPlayer, null, this);
+
+  function hitPlayer(ball, player) {
+    let diff = 0;
+
+    if (ball.x < player.x) {
+      diff = player.x - ball.x;
+      ball.setVelocityX(-10 * diff);
+    } else if (ball.x > player.x) {
+      diff = ball.x - player.x;
+      ball.setVelocityX(10 * diff);
+    } else {
+      ball.setVelocityX(2 + Math.random() * 8);
+    }
+  }
 }
 
 function update() {
