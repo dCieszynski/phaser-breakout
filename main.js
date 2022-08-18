@@ -67,7 +67,7 @@ function create() {
   ball.setBounce(1);
   ball.setCollideWorldBounds(true);
   ball.setVelocity(-75, 300);
-  this.physics.add.collider(ball, player, this.hitPlayer, null, this);
+  this.physics.add.collider(ball, player, hitPlayer, null, this);
   this.physics.add.collider(ball, blocks, hitBlock, null, this);
 
   function hitPlayer(ball, player) {
@@ -86,6 +86,18 @@ function create() {
 
   function hitBlock(ball, block) {
     block.disableBody(true, true);
+
+    if (blocks.countActive() === 0) {
+      resetGame();
+    }
+  }
+
+  function resetGame() {
+    ball.setVelocity(0);
+    ball.setPosition(player.x, 500);
+    blocks.children.each(function (block) {
+      blocks.enableBody(false, 0, 0, true, true);
+    });
   }
 }
 
