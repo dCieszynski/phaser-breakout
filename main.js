@@ -36,21 +36,20 @@ function preload() {
 }
 
 function create() {
-  // Initializing blocks
-  blocks = this.physics.add.staticGroup();
+  this.physics.world.setBoundsCollision(true, true, true, false);
 
-  blocks.createMultiple({
+  // Initializing blocks
+  blocks = this.physics.add.staticGroup({
     key: "block",
     quantity: 69,
-  });
-
-  Phaser.Actions.GridAlign(blocks.getChildren(), {
-    width: 23,
-    height: 3,
-    cellWidth: 34,
-    cellHeight: 34,
-    x: 28,
-    y: 32,
+    gridAlign: {
+      width: 23,
+      height: 3,
+      cellWidth: 34,
+      cellHeight: 34,
+      x: 28,
+      y: 32,
+    },
   });
 
   // Initializing player
@@ -66,9 +65,10 @@ function create() {
   // Initializing ball
   ball = this.physics.add.sprite(player.x, 500, "ball");
   ball.setBounce(1);
-  ball.setCollideWorldBounds(true, true, true, false);
+  ball.setCollideWorldBounds(true);
   ball.setVelocity(-75, 300);
   this.physics.add.collider(ball, player, this.hitPlayer, null, this);
+  this.physics.add.collider(ball, blocks, hitBlock, null, this);
 
   function hitPlayer(ball, player) {
     let diff = 0;
@@ -82,6 +82,10 @@ function create() {
     } else {
       ball.setVelocityX(2 + Math.random() * 8);
     }
+  }
+
+  function hitBlock(ball, block) {
+    block.disableBody(true, true);
   }
 }
 
